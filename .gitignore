@@ -1,0 +1,7 @@
+# Exclude local Visual Studio files.
+.vs/
+*.user
+Debug/
+Release/
+x64/
+x86/
