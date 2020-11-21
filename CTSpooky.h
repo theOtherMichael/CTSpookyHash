@@ -67,7 +67,7 @@ typedef  uint8_t   uint8;
 #endif
 
 
-class SpookyHash
+class CTSpookyHash
 {
 public:
     //

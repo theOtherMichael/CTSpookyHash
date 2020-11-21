@@ -13,7 +13,7 @@
 
 
 // init spooky state
-void SpookyHash::Init(uint64 seed1, uint64 seed2)
+void CTSpookyHash::Init(uint64 seed1, uint64 seed2)
 {
     m_length = 0;
     m_remainder = 0;
@@ -23,7 +23,7 @@ void SpookyHash::Init(uint64 seed1, uint64 seed2)
 
 
 // add a message fragment to the state
-void SpookyHash::Update(const void *message, size_t length)
+void CTSpookyHash::Update(const void *message, size_t length)
 {
     uint64 h0,h1,h2,h3,h4,h5,h6,h7,h8,h9,h10,h11;
     size_t newLength = length + m_remainder;
@@ -127,7 +127,7 @@ void SpookyHash::Update(const void *message, size_t length)
 
 
 // report the hash for the concatenation of all message fragments so far
-void SpookyHash::Final(uint64 *hash1, uint64 *hash2)
+void CTSpookyHash::Final(uint64 *hash1, uint64 *hash2)
 {
     // init the variables
     if (m_length < sc_bufSize)

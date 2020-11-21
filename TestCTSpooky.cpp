@@ -134,7 +134,7 @@ void TestResults()
     for (int i=0; i<BUFSIZE; ++i)
     {
         buf[i] = i+128;
-        saw[i] = SpookyHash::Hash32((const char*)buf, i, 0);
+        saw[i] = CTSpookyHash::Hash32((const char*)buf, i, 0);
         if (saw[i] != expected[i])
         {
         printf("%3d: saw 0x%.8lx, expected 0x%.8lx\n", i, saw[i], expected[i]);
@@ -162,10 +162,10 @@ void DoTimingBig(int seed)
     uint64 hash2 = seed;
     for (uint64 i=0; i<NUMBUF; ++i)
     {
-        SpookyHash::Hash128(buf[i], BUFSIZE, &hash1, &hash2);
+        CTSpookyHash::Hash128(buf[i], BUFSIZE, &hash1, &hash2);
     }
     uint64 z = GetTickCount();
-    printf("SpookyHash::Hash128, uncached: time is %4lld milliseconds\n", z-a);
+    printf("CTSpookyHash::Hash128, uncached: time is %4lld milliseconds\n", z-a);
 
     a = GetTickCount();
     for (uint64 i=0; i<NUMBUF; ++i)
@@ -173,15 +173,15 @@ void DoTimingBig(int seed)
         Add(buf[i], BUFSIZE, &hash1, &hash2);
     }
     z = GetTickCount();
-    printf("Addition           , uncached: time is %4lld milliseconds\n", z-a);
+    printf("Addition             , uncached: time is %4lld milliseconds\n", z-a);
 
     a = GetTickCount();
     for (uint64 i=0; i<NUMBUF*BUFSIZE/1024; ++i)
     {
-        SpookyHash::Hash128(buf[0], 1024, &hash1, &hash2);
+        CTSpookyHash::Hash128(buf[0], 1024, &hash1, &hash2);
     }
     z = GetTickCount();
-    printf("SpookyHash::Hash128,   cached: time is %4lld milliseconds\n", z-a);
+    printf("CTSpookyHash::Hash128,   cached: time is %4lld milliseconds\n", z-a);
 
     a = GetTickCount();
     for (uint64 i=0; i<NUMBUF*BUFSIZE/1024; ++i)
@@ -189,7 +189,7 @@ void DoTimingBig(int seed)
         Add(buf[0], 1024, &hash1, &hash2);
     }
     z = GetTickCount();
-    printf("Addition           ,   cached: time is %4lld milliseconds\n", z-a);
+    printf("Addition             ,   cached: time is %4lld milliseconds\n", z-a);
 
     for (int i=0; i<NUMBUF; ++i)
     {
@@ -221,7 +221,7 @@ void DoTimingSmall(int seed)
         uint64 hash2 = seed+i;
         for (int j=0; j<NUMITER; ++j)
         {
-            SpookyHash::Hash128((char *)buf, i, &hash1, &hash2);
+            CTSpookyHash::Hash128((char *)buf, i, &hash1, &hash2);
         }
         uint64 z = GetTickCount();
         printf("%d bytes: hash is %.16llx %.16llx, time is %lld\n",
@@ -247,7 +247,7 @@ void TestAlignment()
                 buf[j+k] = k;
             }
             buf[j+i+1] = (char)i+j;
-            hash[j] = SpookyHash::Hash64((const char *)(buf+j+1), i, 0);
+            hash[j] = CTSpookyHash::Hash64((const char *)(buf+j+1), i, 0);
         }
         for (int j=1; j<8; ++j)
         {
@@ -307,8 +307,8 @@ void TestDeltas(int seed)
                     {
                         buf1[j/8] ^= (1 << (j%8));
                     }
-                    SpookyHash::Hash128((const char*)buf1, h, &measure[0][0], &measure[0][1]);
-                    SpookyHash::Hash128((const char*)buf2, h, &measure[1][0], &measure[1][1]);
+                    CTSpookyHash::Hash128((const char*)buf1, h, &measure[0][0], &measure[0][1]);
+                    CTSpookyHash::Hash128((const char*)buf2, h, &measure[1][0], &measure[1][1]);
                     for (int l=0; l<2; ++l) {
                         measure[2][l] = measure[0][l] ^ measure[1][l];
                         measure[3][l] = ~(measure[0][l] ^ measure[1][l]);
@@ -358,12 +358,12 @@ void TestPieces()
     for (int i=0; i<BUFSIZE; ++i)
     {
         uint64 a,b,c,d,seed1=1,seed2=2;
-        SpookyHash state;
+        CTSpookyHash state;
 
         // all as one call
         a = seed1;
         b = seed2;
-        SpookyHash::Hash128(buf, i, &a, &b);
+        CTSpookyHash::Hash128(buf, i, &a, &b);
 
         // all as one piece
         c = 0xdeadbeefdeadbeef;
